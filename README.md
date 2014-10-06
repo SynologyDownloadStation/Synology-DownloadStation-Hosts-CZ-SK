@@ -16,9 +16,10 @@ tar zcf myhost.host INFO host.php
 1. Login to Synology NAS (https://YOUR_SYNOLOGY_IP:5000/webman/index.cgi)
 2. Open Download Station package > Settings > File hosting
 5. Click Add and locate 
-6. Once done click Edit and fill in your premium account details
+6. Once done click Edit and fill in your premium account details (Verify button always returns login error) and hit OK
 
 for Filefactory..
+
 7. Disable the official Filefactory plugin -  otherwise you receive login errors.
 
 Credits
