@@ -1,14 +1,10 @@
 Synology-DownloadStation-Hosts-CZ-SK
 ====================================
-Download Station Unofficial host files for Czech and Slovak servers
+Download Station Unofficial host files for Czech and Slovak servers. Visit http://forum.synology.com/ for further resources.
 
-synology-filefactory-host
+Support
 =========================
-Unofficial host files for Synology NAS - Download Station. Visit http://forum.synology.com/ for further resources.
-
-Feature
-=========================
-1. premium account support
+- Uloz.to > Premium accounts
 
 Install
 =========================
