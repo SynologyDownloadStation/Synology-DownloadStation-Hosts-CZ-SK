@@ -21,7 +21,7 @@ class HostingUlozto {
 	private $Password;
 	private $HostInfo;
 	private $Token;
-	private $UT_COOKIE_JAR = '/ut.cookie';
+	private $UT_COOKIE_JAR = '/tmp/ut.cookie';
 	private $LOGIN_URL = "http://uloz.to/login";
 	private $LOGIN_URL_SUFFIX = "?do=downloadDialog-loginForm-submit";
 		
@@ -33,7 +33,7 @@ class HostingUlozto {
 	}
 	
 	public function Verify() {
-		return $this->performLogin();
+		return $this->performLogin(true);
 	}
 	
 	public function GetDownloadInfo($ClearCookie) {
@@ -55,14 +55,14 @@ class HostingUlozto {
 		return $xpath->query("//*[@id='$id']")->item(0);
 	}
 
-	private function performLogin() {
+	private function performLogin( $verifyOnly = false ) {
 		$ret = LOGIN_FAIL;
 		
 		// We need to get token from input inside the page 
 		$curl = curl_init();
 		curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE);
 		curl_setopt($curl, CURLOPT_USERAGENT, DOWNLOAD_STATION_USER_AGENT);
-		curl_setopt($curl, CURLOPT_COOKIEJAR, dirname(__FILE__) . $this->UT_COOKIE_JAR);
+		curl_setopt($curl, CURLOPT_COOKIEJAR, $this->UT_COOKIE_JAR);
 		curl_setopt($curl, CURLOPT_HEADER, TRUE);
 		curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
 		curl_setopt($curl, CURLOPT_URL, $this->Url );
@@ -104,8 +104,8 @@ class HostingUlozto {
 		curl_setopt($curl, CURLOPT_POST, TRUE);
 		curl_setopt($curl, CURLOPT_POSTFIELDS, $PostData);
 		curl_setopt($curl, CURLOPT_USERAGENT, DOWNLOAD_STATION_USER_AGENT);
-		//curl_setopt($curl, CURLOPT_COOKIEJAR, dirname(__FILE__) . $this->UT_COOKIE_JAR);
-		curl_setopt($curl, CURLOPT_COOKIEFILE, dirname(__FILE__) . $this->UT_COOKIE_JAR);
+		//curl_setopt($curl, CURLOPT_COOKIEJAR, $this->UT_COOKIE_JAR);
+		curl_setopt($curl, CURLOPT_COOKIEFILE, $this->UT_COOKIE_JAR);
 		curl_setopt($curl, CURLOPT_HEADER, TRUE);
 		curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
 		curl_setopt($curl, CURLOPT_REFERER, $this->Url);
@@ -122,7 +122,12 @@ class HostingUlozto {
 		if ($LoginInfo != false) {			
 			if ($error_code == 301 || $error_code == 302 || $error_code == 303) {
 				if ( stristr($redirect_url, 'dla') ) { //dla.uloz.to
-					return $redirect_url;
+					if ($verifyOnly == true) {
+						// when user clicks on Verify button
+						return USER_IS_PREMIUM;
+					} else {
+						return $redirect_url;
+					}
 				} else {
 					return LOGIN_FAIL;
 				}
